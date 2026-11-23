@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="sq">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Worknexa — Paneli i menaxhimit</title>
+<link rel="icon" href="/favicon.svg">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="logo">w</span> worknexa. <span class="sub">/ Paneli i menaxhimit</span></div>
+  <nav id="nav" hidden>
+    <button data-tab="apps" class="on">Aplikimet <span id="newCount" class="pill"></span></button>
+    <button data-tab="cands">Kandidatët</button>
+    <button data-tab="jobs">Ofertat e punës</button>
+    <button data-tab="texts">Tekstet e faqes</button>
+    <button data-tab="account">Llogaria</button>
+  </nav>
+  <a class="open" href="/" target="_blank" rel="noopener">Hap faqen ↗</a>
+</header>
+
+<main>
+  <!-- login / setup -->
+  <section id="auth" class="card narrow" hidden>
+    <h1 id="authTitle">Hyr në panel</h1>
+    <p id="authHint" class="muted"></p>
+    <form id="authForm">
+      <label>E-mail<input name="email" type="email" required autocomplete="username"></label>
+      <label>Fjalëkalimi<input name="password" type="password" required minlength="10" autocomplete="current-password"></label>
+      <label id="pw2wrap" hidden>Përsërit fjalëkalimin<input name="password2" type="password" minlength="10" autocomplete="new-password"></label>
+      <button class="primary" type="submit" id="authBtn">Hyr</button>
+      <p class="err" id="authErr"></p>
+    </form>
+  </section>
+
+  <!-- applications -->
+  <section id="tab-apps" class="tab" hidden>
+    <div class="head">
+      <h1>Aplikimet</h1>
+      <p class="muted">Të dhënat, fotot dhe videot shihen vetëm nga administratori.</p>
+    </div>
+    <div class="toolbar">
+      <input id="q" type="search" placeholder="Kërko emër, profesion, vend…">
+      <select id="fStatus">
+        <option value="">Të gjitha statuset</option>
+        <option value="new">E re</option><option value="reviewing">Në shqyrtim</option>
+        <option value="contacted">E kontaktuar</option><option value="closed">E mbyllur</option>
+      </select>
+      <select id="fType">
+        <option value="">Të gjithë</option><option value="worker">Punëtorë</option>
+        <option value="employer">Punëdhënës</option><option value="agency">Agjenci</option>
+      </select>
+      <button id="exportCsv" class="ghost">Shkarko CSV</button>
+    </div>
+    <div id="apps" class="list"></div>
+  </section>
+
+  <!-- candidates -->
+  <section id="tab-cands" class="tab" hidden>
+    <div class="head">
+      <h1>Kandidatët në faqe</h1>
+      <p class="muted">Profile anonime që shfaqen te seksioni "Kandidatët" në faqe. Mos shkruani emra, telefona apo e-maile.</p>
+    </div>
+    <form id="candForm" class="card grid">
+      <input type="hidden" name="id">
+      <label>Profesioni *<input name="profession" required placeholder="p.sh. Elektricist / Electrician"></label>
+      <label>Përvoja<input name="experience" placeholder="p.sh. 18 vjet"></label>
+      <label>Ndodhet në<input name="location" placeholder="p.sh. Itali"></label>
+      <label>Shtetësia<input name="nationality" placeholder="p.sh. Shqiptare"></label>
+      <label>Gjuhët<input name="languages" placeholder="p.sh. Shqip, Anglisht"></label>
+      <label>Kodi<input name="code" placeholder="krijohet vetë (WN-003…)"></label>
+      <label>Statusi
+        <select name="status"><option value="available">I disponueshëm</option><option value="interviewing">Në intervistë</option><option value="placed">I punësuar</option></select>
+      </label>
+      <label class="check"><input type="checkbox" name="published" checked> Shfaqe në faqe</label>
+      <input type="hidden" name="app_id">
+      <div class="actions"><button class="primary" type="submit">Ruaj kandidatin</button><button type="reset" class="ghost">Pastro</button></div>
+      <p class="err" id="candErr"></p>
+    </form>
+    <div id="cands" class="list"></div>
+  </section>
+
+  <!-- jobs -->
+  <section id="tab-jobs" class="tab" hidden>
+    <div class="head">
+      <h1>Ofertat e punës</h1>
+      <p class="muted">Ofertat e publikuara shfaqen në faqe te "Vende pune".</p>
+    </div>
+    <form id="jobForm" class="card grid">
+      <input type="hidden" name="id">
+      <label>Pozicioni *<input name="title" required></label>
+      <label>Shteti<input name="country"></label>
+      <label>Sektori<input name="sector"></label>
+      <label>Paga dhe kushtet<input name="pay"></label>
+      <label class="wide">Përshkrimi dhe kriteret<textarea name="description" rows="5"></textarea></label>
+      <label class="check"><input type="checkbox" name="published" checked> Publiko në faqe</label>
+      <div class="actions"><button class="primary" type="submit">Ruaj ofertën</button><button type="reset" class="ghost">Pastro</button></div>
+      <p class="err" id="jobErr"></p>
+    </form>
+    <div id="jobs" class="list"></div>
+  </section>
+
+  <!-- texts -->
+  <section id="tab-texts" class="tab" hidden>
+    <div class="head">
+      <h1>Tekstet e faqes</h1>
+      <p class="muted">Ndryshoni tekstet kryesore. Zgjidhni gjuhën: çdo gjuhë ka tekstet e veta. Ndryshimi shfaqet menjëherë në faqe.</p>
+    </div>
+    <div class="toolbar">
+      <select id="tLang">
+        <option value="en">English</option><option value="sq">Shqip</option><option value="de">Deutsch</option>
+        <option value="sl">Slovenščina</option><option value="fr">Français</option><option value="it">Italiano</option>
+        <option value="zh">中文</option><option value="be">Беларуская</option><option value="ro-MD">Moldovenească</option>
+        <option value="ru">Русский</option><option value="uz">O‘zbekcha</option>
+      </select>
+    </div>
+    <div id="sections" class="card"></div>
+    <div id="texts" class="list"></div>
+  </section>
+
+  <!-- account -->
+  <section id="tab-account" class="tab" hidden>
+    <div class="head"><h1>Llogaria</h1><p class="muted" id="whoami"></p></div>
+    <form id="pwForm" class="card narrow">
+      <h2>Ndrysho fjalëkalimin</h2>
+      <label>Fjalëkalimi aktual<input name="current" type="password" required autocomplete="current-password"></label>
+      <label>Fjalëkalimi i ri (të paktën 10 shkronja)<input name="next" type="password" required minlength="10" autocomplete="new-password"></label>
+      <button class="primary" type="submit">Ndrysho</button>
+      <p class="err" id="pwErr"></p>
+    </form>
+    <div class="card narrow">
+      <h2>Importo aplikime</h2>
+      <p class="muted">Ngjitni JSON me aplikime (përdoret vetëm një herë, për kalimin nga faqja e vjetër).</p>
+      <textarea id="importJson" rows="5"></textarea>
+      <button id="importBtn" class="ghost">Importo</button>
+      <p class="err" id="importMsg"></p>
+    </div>
+    <button id="logout" class="ghost">Dil nga paneli</button>
+  </section>
+</main>
+
+<div id="lightbox" hidden><button aria-label="Mbyll">×</button><div class="lb-body"></div></div>
+<div id="toast" hidden></div>
+<script src="/admin/admin.js"></script>
+</body>
+</html>

@@ -258,6 +258,20 @@ export async function onRequest({ request, env, params }) {
     return json({ ok: true });
   }
 
+  // ----- site images (served publicly at /media/<name>) -----
+  m = path.match(/^media\/([\w\/.-]+\.(?:jpg|jpeg|png|webp))$/);
+  if (m && method === 'PUT' && !m[1].includes('..')) {
+    if (!env.FILES) return bad('File storage is not configured', 500);
+    const buf = new Uint8Array(await request.arrayBuffer());
+    if (!buf.byteLength || buf.byteLength > 5 * 1024 * 1024) return bad('Foto duhet të jetë deri në 5 MB.');
+    const h = Array.from(buf.slice(0, 12)).map((x) => x.toString(16).padStart(2, '0')).join('');
+    const ct = h.startsWith('ffd8ff') ? 'image/jpeg' : h.startsWith('89504e47') ? 'image/png'
+      : h.startsWith('52494646') && h.slice(16, 24) === '57454250' ? 'image/webp' : null;
+    if (!ct) return bad('Lejohen vetëm JPG, PNG ose WEBP.');
+    await env.FILES.put('media/' + m[1], buf, { httpMetadata: { contentType: ct } });
+    return json({ ok: true, url: '/media/' + m[1] });
+  }
+
   // ----- editable texts (overrides of the page texts, per language) -----
   if (path === 'texts' && method === 'GET') {
     return json({ items: (await env.DB.prepare('SELECT lang, key, value FROM texts').all()).results });

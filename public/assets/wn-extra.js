@@ -233,7 +233,7 @@
         cSec.hidden = false;
         cSec.querySelector('.cand-grid').innerHTML = data.candidates.map((c) => `
           <article class="cand-card">
-            <img class="cand-photo" src="${photoFor(c.profession)}" alt="${esc(c.profession)}" loading="lazy" width="320" height="180">
+            <img class="cand-photo" src="${esc(c.photo || photoFor(c.profession))}" alt="${esc(c.profession)}" loading="lazy" width="320" height="180">
             <div class="cand-top"><span class="cand-code">${esc(c.code)}</span><span class="cand-status st-${esc(c.status)}">${esc(t.st[c.status] || c.status)}</span></div>
             <h3>${esc(c.profession)}</h3>
             <ul class="cand-facts">

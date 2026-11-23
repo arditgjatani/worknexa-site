@@ -224,7 +224,37 @@ export async function onRequest({ request, env, params }) {
     return json({ ok: true });
   }
   if (m && method === 'DELETE') {
+    const cur = await env.DB.prepare('SELECT photo FROM candidates WHERE id = ?').bind(m[1]).first();
+    if (cur?.photo?.startsWith('r2:') && env.FILES) await env.FILES.delete(cur.photo.slice(3));
     await env.DB.prepare('DELETE FROM candidates WHERE id = ?').bind(m[1]).run();
+    return json({ ok: true });
+  }
+  // Photo of a candidate card: either a built-in picture (/assets/...), an uploaded image, or automatic (empty).
+  m = path.match(/^candidates\/([\w-]+)\/photo$/);
+  if (m && method === 'PATCH') {
+    const b = await body(request);
+    const p = clean(b.photo, 200);
+    if (p && !/^\/assets\/[\w\/.-]+\.(webp|jpg|jpeg|png)$/.test(p)) return bad('Invalid photo');
+    const cur = await env.DB.prepare('SELECT photo FROM candidates WHERE id = ?').bind(m[1]).first();
+    if (!cur) return bad('Not found', 404);
+    if (cur.photo?.startsWith('r2:') && env.FILES) await env.FILES.delete(cur.photo.slice(3));
+    await env.DB.prepare('UPDATE candidates SET photo = ? WHERE id = ?').bind(p || null, m[1]).run();
+    return json({ ok: true });
+  }
+  if (m && method === 'PUT') {
+    if (!env.FILES) return bad('File storage is not configured', 500);
+    const cur = await env.DB.prepare('SELECT photo FROM candidates WHERE id = ?').bind(m[1]).first();
+    if (!cur) return bad('Not found', 404);
+    const buf = new Uint8Array(await request.arrayBuffer());
+    if (!buf.byteLength || buf.byteLength > 5 * 1024 * 1024) return bad('Foto duhet të jetë deri në 5 MB.');
+    const h = Array.from(buf.slice(0, 12)).map((x) => x.toString(16).padStart(2, '0')).join('');
+    const ct = h.startsWith('ffd8ff') ? 'image/jpeg' : h.startsWith('89504e47') ? 'image/png'
+      : h.startsWith('52494646') && h.slice(16, 24) === '57454250' ? 'image/webp' : null;
+    if (!ct) return bad('Lejohen vetëm JPG, PNG ose WEBP.');
+    if (cur.photo?.startsWith('r2:')) await env.FILES.delete(cur.photo.slice(3));
+    const key = `candidates/${m[1]}-${uid()}.${ct.split('/')[1]}`;
+    await env.FILES.put(key, buf, { httpMetadata: { contentType: ct } });
+    await env.DB.prepare('UPDATE candidates SET photo = ? WHERE id = ?').bind('r2:' + key, m[1]).run();
     return json({ ok: true });
   }
 

@@ -200,6 +200,19 @@
 
   // ---------- candidates ----------
   const CSTATUS = { available: 'I disponueshëm', interviewing: 'Në intervistë', placed: 'I punësuar' };
+  const PICS = [
+    ['/assets/professions/electricians.webp', 'Elektricist'], ['/assets/professions/construction.webp', 'Ndërtim / suvatim / gips'],
+    ['/assets/workforce.jpg', 'Kantier ndërtimi (jashtë)'], ['/assets/professions/plumbing.webp', 'Hidraulik'],
+    ['/assets/professions/welding.webp', 'Saldator'], ['/assets/professions/carpentry.webp', 'Zdrukthëtar'],
+    ['/assets/professions/general.webp', 'Punëtor ndihmës'], ['/assets/professions/manufacturing.webp', 'Prodhim'],
+    ['/assets/professions/logistics.webp', 'Magazinë'], ['/assets/professions/transport.webp', 'Shofer'],
+    ['/assets/professions/restaurants.webp', 'Kuzhinë / restorant'], ['/assets/professions/hotels.webp', 'Hotel'],
+    ['/assets/professions/cleaning.webp', 'Pastrim'], ['/assets/professions/healthcare.webp', 'Kujdes / shëndetësi'],
+    ['/assets/professions/agriculture.webp', 'Bujqësi'], ['/assets/professions/automotive.webp', 'Mekanik'],
+    ['/assets/professions/textiles.webp', 'Tekstil'], ['/assets/professions/food.webp', 'Ushqim'],
+    ['/assets/professions/security.webp', 'Sigurim'], ['/assets/professions/engineering.webp', 'Inxhinieri'],
+    ['/assets/professions/retail.webp', 'Shitje'], ['/assets/professions/it.webp', 'IT'],
+  ];
   let cands = [];
   loaders.cands = async () => {
     cands = (await api('candidates')).items;
@@ -209,6 +222,17 @@
           <div><h3>${esc(c.code)} · ${esc(c.profession)}</h3>
           <div class="meta">${esc([c.experience, c.location, c.nationality, c.languages].filter(Boolean).join(' · '))}</div></div>
           <div class="ctrl"><span class="tag">${esc(CSTATUS[c.status] || c.status)}</span><span class="tag">${c.published ? 'Në faqe' : 'I fshehur'}</span></div>
+        </div>
+        <div class="cand-photo-row">
+          <img src="${esc(c.photo ? (c.photo.startsWith('r2:') ? '/api/candphoto/' + c.id + '?t=' + Date.now() : c.photo) : '')}" alt="" ${c.photo ? '' : 'hidden'}>
+          <label>Foto e kartës
+            <select data-act="photo">
+              <option value="">Automatike (sipas profesionit)</option>
+              ${PICS.map(([v, l]) => `<option value="${v}" ${c.photo === v ? 'selected' : ''}>${l}</option>`).join('')}
+              ${c.photo && c.photo.startsWith('r2:') ? '<option value="__up" selected>Foto e ngarkuar</option>' : ''}
+            </select>
+          </label>
+          <label class="ghost upbtn">Ngarko foto tjetër<input type="file" accept="image/jpeg,image/png,image/webp" data-act="upload" hidden></label>
         </div>
         <div class="more">
           <button class="ghost" data-act="edit">Ndrysho</button>
@@ -235,6 +259,25 @@
     } catch (err) { $('#candErr').textContent = err.message; }
   });
   $('#candForm').addEventListener('reset', (e) => { e.target.id.value = ''; e.target.app_id.value = ''; });
+
+  $('#cands').addEventListener('change', async (e) => {
+    const act = e.target.dataset.act; if (!act) return;
+    const id = e.target.closest('.item').dataset.id;
+    try {
+      if (act === 'photo' && e.target.value !== '__up') {
+        await api('candidates/' + id + '/photo', { method: 'PATCH', body: { photo: e.target.value } });
+        toast('Foto u ndryshua'); loaders.cands();
+      }
+      if (act === 'upload' && e.target.files[0]) {
+        const f = e.target.files[0];
+        if (f.size > 5 * 1048576) { toast('Foto duhet të jetë deri në 5 MB'); return; }
+        const res = await fetch('/api/admin/candidates/' + id + '/photo', { method: 'PUT', headers: { 'x-wn-admin': '1', 'content-type': f.type }, body: f });
+        const d = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(d.error || 'Gabim');
+        toast('Foto u ngarkua'); loaders.cands();
+      }
+    } catch (err) { toast(err.message); }
+  });
 
   $('#cands').addEventListener('click', async (e) => {
     const act = e.target.dataset.act; if (!act) return;

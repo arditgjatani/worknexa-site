@@ -7,7 +7,11 @@ export async function onRequestGet({ env }) {
     'SELECT id, title, country, sector, pay, description, created_at FROM jobs WHERE published = 1 ORDER BY created_at DESC'
   ).all();
   const candidates = await env.DB.prepare(
-    'SELECT code, profession, experience, location, nationality, languages, status FROM candidates WHERE published = 1 ORDER BY sort ASC, created_at ASC'
+    'SELECT id, code, profession, experience, location, nationality, languages, status, photo FROM candidates WHERE published = 1 ORDER BY sort ASC, created_at ASC'
   ).all();
-  return json({ jobs: jobs.results, candidates: candidates.results }, 200, { 'cache-control': 'public, max-age=60' });
+  const list = candidates.results.map(({ id, photo, ...c }) => ({
+    ...c,
+    photo: photo ? (photo.startsWith('r2:') ? `/api/candphoto/${id}` : photo) : null,
+  }));
+  return json({ jobs: jobs.results, candidates: list }, 200, { 'cache-control': 'public, max-age=60' });
 }

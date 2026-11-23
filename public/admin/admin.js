@@ -29,7 +29,7 @@
     name: 'Emri', company: 'Firma', profession: 'Profesioni', experience: 'Përvoja (vjet)', country: 'Vendi',
     languages: 'Gjuhët', phone: 'Telefoni', email: 'E-mail', sector: 'Sektori', quantity: 'Numri i punëtorëve',
     destination: 'Destinacioni', availability: 'Disponueshmëria', message: 'Mesazhi', video_link: 'Link videoje',
-    interest: 'Interesi', consent_at: 'Pëlqimi më',
+    interest: 'Interesi', consent_at: 'Pëlqimi më', vacancyId: 'Oferta e zgjedhur', sectorInterest: 'Sektori i zgjedhur',
   };
   const fmtDate = (iso) => { try { return new Date(iso).toLocaleString('sq-AL', { dateStyle: 'medium', timeStyle: 'short' }); } catch { return iso; } };
   const fmtSize = (b) => (b > 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.round(b / 1024) + ' KB');

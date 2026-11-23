@@ -1,0 +1,42 @@
+/* Worknexa extras: vacancies/candidates sections and candidate photo/video upload. */
+.wn-list { padding-top: 56px; padding-bottom: 56px; }
+.wn-list[hidden] { display: none; }
+.wn-list .cand-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; flex-wrap: wrap; margin-bottom: 28px; }
+.wn-list .cand-head h2 { margin: 8px 0 0; color: var(--navy, #102a47); }
+.wn-list .cand-head p { max-width: 460px; margin: 0; color: var(--muted, #5c6e81); line-height: 1.55; }
+.wn-list .cand-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink, #122b48); }
+.wn-list .cand-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+.wn-list .cand-card { background: #f0f8f6; border: 1px solid var(--line, #dbe4ec); border-radius: 7px; padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+.wn-list .cand-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.wn-list .cand-code { font-size: 12px; font-weight: 700; letter-spacing: .1em; color: var(--muted, #5c6e81); text-transform: uppercase; }
+.wn-list .cand-status { font-size: 12px; font-weight: 700; color: #0f6b4f; background: #d6f5ea; border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
+.wn-list .cand-status.st-interviewing { color: #8a5a00; background: #fdf0d2; }
+.wn-list .cand-status.st-placed { color: #5c6e81; background: #e8edf2; }
+.wn-list .cand-card h3 { margin: 0; font-size: 21px; color: var(--navy, #102a47); }
+.wn-list .cand-facts { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.wn-list .cand-facts li { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line, #dbe4ec); padding-bottom: 8px; font-size: 15px; }
+.wn-list .cand-facts li span:first-child { color: var(--muted, #5c6e81); }
+.wn-list .job-pay { margin: 0; font-weight: 700; }
+.wn-list .job-desc { margin: 0; color: var(--muted, #5c6e81); line-height: 1.5; }
+.wn-list .cand-btn { margin-top: auto; display: inline-block; text-align: center; background: var(--navy, #102a47); color: #fff; text-decoration: none; font-weight: 700; font-size: 15px; padding: 12px 16px; border-radius: 4px; }
+.wn-list .cand-btn:hover { background: #0b1f36; }
+.wn-list .cand-note { margin-top: 22px; font-size: 14px; color: var(--muted, #5c6e81); line-height: 1.5; }
+@media (max-width: 700px) { .wn-list .cand-head { display: block; } .wn-list .cand-head p { margin-top: 12px; } }
+
+.wn-upload { display: grid; gap: 10px; margin: 6px 0 16px; padding-top: 12px; border-top: 1px solid var(--line, #dbe4ec); }
+.wn-upload .wn-field { display: flex; flex-direction: column; gap: 6px; }
+.wn-upload .wn-field > span { font-weight: 700; font-size: 14px; }
+.wn-upload .wn-field small { color: var(--muted, #5c6e81); font-size: 12px; }
+.wn-upload input[type="file"] { font: inherit; font-size: 14px; }
+.wn-upload input[type="url"] { font: inherit; padding: 10px 12px; border: 1px solid var(--line, #dbe4ec); border-radius: 4px; }
+.wn-previews { display: flex; gap: 8px; flex-wrap: wrap; }
+.wn-previews:empty { display: none; }
+.wn-thumb { position: relative; }
+.wn-thumb img, .wn-thumb video { width: 84px; height: 84px; object-fit: cover; border-radius: 6px; border: 1px solid var(--line, #dbe4ec); background: #000; display: block; }
+.wn-thumb button { position: absolute; top: -8px; right: -8px; width: 24px; height: 24px; border-radius: 50%; border: 0; background: var(--navy, #102a47); color: #fff; cursor: pointer; line-height: 24px; padding: 0; }
+.wn-err { color: #b42318; margin: 0; font-size: 14px; }
+.wn-err:empty { display: none; }
+.wn-progress { position: relative; height: 26px; background: #e8edf2; border-radius: 4px; overflow: hidden; }
+.wn-progress[hidden] { display: none; }
+.wn-progress div { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--mint, #7be0be); transition: width .2s; }
+.wn-progress span { position: relative; font-size: 13px; line-height: 26px; padding-left: 10px; }

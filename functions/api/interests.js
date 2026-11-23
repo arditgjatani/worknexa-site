@@ -3,7 +3,8 @@ import { json, bad, ensureSchema, now, uid, sign, clean, rateLimited, clientIp }
 
 const TYPES = ['employer', 'worker', 'agency'];
 const FIELDS = ['company', 'country', 'name', 'email', 'phone', 'sector', 'quantity', 'message',
-  'profession', 'experience', 'languages', 'destination', 'availability', 'video_link', 'interest'];
+  'profession', 'experience', 'languages', 'destination', 'availability', 'video_link', 'interest',
+  'vacancyId', 'sectorInterest'];
 
 async function readBody(request) {
   const ct = request.headers.get('content-type') || '';
@@ -46,7 +47,7 @@ export async function onRequestPost({ request, env }) {
   data.consent_at = now();
 
   const id = uid();
-  const lang = clean(body.lang, 10) || null;
+  const lang = clean(body.lang || body.language, 10) || null;
   await env.DB.prepare('INSERT INTO applications (id, type, created_at, status, lang, data) VALUES (?, ?, ?, ?, ?, ?)')
     .bind(id, type, now(), 'new', lang, JSON.stringify(data)).run();
 

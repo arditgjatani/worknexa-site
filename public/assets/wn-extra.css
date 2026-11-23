@@ -7,6 +7,7 @@
 .wn-list .cand-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink, #122b48); }
 .wn-list .cand-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
 .wn-list .cand-card { background: #f0f8f6; border: 1px solid var(--line, #dbe4ec); border-radius: 7px; padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+.wn-list .cand-photo { width: calc(100% + 48px); margin: -24px -24px 0; height: 170px; object-fit: cover; border-radius: 7px 7px 0 0; display: block; }
 .wn-list .cand-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .wn-list .cand-code { font-size: 12px; font-weight: 700; letter-spacing: .1em; color: var(--muted, #5c6e81); text-transform: uppercase; }
 .wn-list .cand-status { font-size: 12px; font-weight: 700; color: #0f6b4f; background: #d6f5ea; border-radius: 999px; padding: 4px 10px; white-space: nowrap; }

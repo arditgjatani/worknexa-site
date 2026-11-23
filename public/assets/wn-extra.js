@@ -185,6 +185,21 @@
     return res;
   };
 
+
+  // Picture for a candidate card, chosen from the profession (no personal photos are shown publicly).
+  const PHOTO_RULES = [
+    [/electr|elektr/i, 'electricians'], [/plumb|hidraul|hvac|vodoinstal/i, 'plumbing'],
+    [/weld|sald|metal|var/i, 'welding'], [/carpent|zdrukth|furniture|mobil/i, 'carpentry'],
+    [/driver|shofer|transport|truck|kamion/i, 'transport'], [/cook|chef|kuzhin|restaur|waiter|kamarier/i, 'restaurants'],
+    [/hotel|recep/i, 'hotels'], [/clean|pastr/i, 'cleaning'], [/care|nurse|infermier|kujdes/i, 'healthcare'],
+    [/farm|agri|bujq/i, 'agriculture'], [/warehouse|logist|magazin/i, 'logistics'], [/factory|operator|prodhim|manufact/i, 'manufacturing'],
+    [/mechanic|mekanik|auto/i, 'automotive'], [/plaster|suva|gips|drywall|facade|fasad|tile|pllak|paint|lyer|mason|murator|construct|ndërtim|steel|hekur|armatur/i, 'construction'],
+  ];
+  const photoFor = (prof) => {
+    const hit = PHOTO_RULES.find(([re]) => re.test(prof || ''));
+    return '/assets/professions/' + (hit ? hit[1] : 'general') + '.webp';
+  };
+
   // ---------------- public "Vacancies" and "Candidates" sections ----------------
   function prefillEmployer(message) {
     const reg = document.getElementById('register');
@@ -218,6 +233,7 @@
         cSec.hidden = false;
         cSec.querySelector('.cand-grid').innerHTML = data.candidates.map((c) => `
           <article class="cand-card">
+            <img class="cand-photo" src="${photoFor(c.profession)}" alt="${esc(c.profession)}" loading="lazy" width="320" height="180">
             <div class="cand-top"><span class="cand-code">${esc(c.code)}</span><span class="cand-status st-${esc(c.status)}">${esc(t.st[c.status] || c.status)}</span></div>
             <h3>${esc(c.profession)}</h3>
             <ul class="cand-facts">

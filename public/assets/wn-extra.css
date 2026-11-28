@@ -76,3 +76,15 @@
 .vacancy .vac-toggle { display: block; margin: 4px 0 14px; padding: 0; border: 0; background: none; color: #137c64; font-weight: 700; font-size: 14px; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; min-height: 32px; }
 .vacancy .vac-more[hidden] { display: none !important; }
 @media (max-width: 650px) { .vacancy-grid > .vac-photo img { max-height: 220px; } }
+
+/* Vacancy shown as one card, like the candidate cards: photo on top, text below */
+.vacancy .vacancy-grid { grid-template-columns: 1fr; gap: 0; max-width: 420px; padding: 0; overflow: hidden; background: #f0f8f6; border: 1px solid var(--line, #dbe4ec); border-top: 4px solid #15916f; border-radius: 7px; }
+.vacancy .vacancy-grid > .vac-photo { border-radius: 0; }
+.vacancy .vacancy-grid > .vac-photo img { aspect-ratio: auto; height: 190px; max-height: none; border-radius: 0; }
+.vacancy .vacancy-grid > div { padding: 20px 22px 22px; }
+.vacancy .vacancy-grid h2 { font-size: 20px; line-height: 1.25; margin: 8px 0 10px; letter-spacing: -.3px; }
+.vacancy .vacancy-grid h3 { font-size: 15px; line-height: 1.35; margin: 0 0 8px; }
+.vacancy .vacancy-grid p { font-size: 13px; margin: 0 0 10px; }
+.vacancy .vacancy-grid .vacancy-disclaimer { padding: 12px; }
+.vacancy .vacancy-grid .btn { width: 100%; }
+@media (max-width: 650px) { .vacancy .vacancy-grid { max-width: none; } .vacancy .vacancy-grid > .vac-photo img { height: 170px; } }

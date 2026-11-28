@@ -208,7 +208,16 @@
     [/farm|agri|bujq/i, 'agriculture'], [/warehouse|logist|magazin/i, 'logistics'], [/factory|operator|prodhim|manufact/i, 'manufacturing'],
     [/mechanic|mekanik|auto/i, 'automotive'], [/plaster|suva|gips|drywall|facade|fasad|tile|pllak|paint|lyer|mason|murator|construct|ndërtim|steel|hekur|armatur/i, 'construction'],
   ];
+  // Construction trades with their own sector picture (stored in R2 under /media/sectors/).
+  const TRADE_PHOTOS = [
+    [/steel|rebar|hekur|armatur|钢筋/i, 'steel-fixers'], [/facade|fasad|insulat|izol/i, 'facade'],
+    [/plaster|suva|gips|drywall|抹灰/i, 'plasterers'], [/paint|lyer|boja/i, 'painters'],
+    [/tile|tiler|pllak|ploščic/i, 'tilers'], [/mason|brick|murator|zidar/i, 'masons'],
+    [/roof|çati|krov/i, 'roofers'], [/excavat|crane|machine operator|ekskavator|vinç|gradbena mehan/i, 'machine-operators'],
+  ];
   const photoFor = (prof) => {
+    const trade = TRADE_PHOTOS.find(([re]) => re.test(prof || ''));
+    if (trade) return '/media/sectors/' + trade[1] + '.jpg';
     const hit = PHOTO_RULES.find(([re]) => re.test(prof || ''));
     return '/assets/professions/' + (hit ? hit[1] : 'general') + '.webp';
   };

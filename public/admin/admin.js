@@ -216,6 +216,10 @@
     ['/assets/professions/textiles.webp', 'Tekstil'], ['/assets/professions/food.webp', 'Ushqim'],
     ['/assets/professions/security.webp', 'Sigurim'], ['/assets/professions/engineering.webp', 'Inxhinieri'],
     ['/assets/professions/retail.webp', 'Shitje'], ['/assets/professions/it.webp', 'IT'],
+    ['/media/sectors/steel-fixers.jpg', 'Lidhës hekuri'], ['/media/sectors/plasterers.jpg', 'Suvaxhi'],
+    ['/media/sectors/facade.jpg', 'Fasadë / izolim'], ['/media/sectors/painters.jpg', 'Bojaxhi'],
+    ['/media/sectors/tilers.jpg', 'Pllakashtrues'], ['/media/sectors/masons.jpg', 'Murator'],
+    ['/media/sectors/roofers.jpg', 'Çatixhi'], ['/media/sectors/machine-operators.jpg', 'Operator makinerish'],
   ];
   let cands = [];
   loaders.cands = async () => {

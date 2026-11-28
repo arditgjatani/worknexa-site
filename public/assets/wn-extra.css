@@ -43,3 +43,18 @@
 .wn-progress span { position: relative; font-size: 13px; line-height: 26px; padding-left: 10px; }
 
 .wn-thumb.wn-file span { display: inline-block; max-width: 260px; padding: 10px 14px; border: 1px solid var(--line, #dbe4ec); border-radius: 6px; background: #f6f8fb; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Phones: candidate and vacancy cards two per row, like the sectors. */
+@media (max-width: 650px) {
+  .wn-list .cand-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .wn-list .cand-card { padding: 12px; gap: 10px; min-width: 0; }
+  .wn-list .cand-photo { width: calc(100% + 24px); margin: -12px -12px 0; height: 110px; }
+  .wn-list .cand-top { flex-wrap: wrap; gap: 6px; }
+  .wn-list .cand-code { font-size: 10px; letter-spacing: .06em; }
+  .wn-list .cand-status { font-size: 10px; padding: 3px 7px; }
+  .wn-list .cand-card h3 { font-size: 15px; line-height: 1.25; overflow-wrap: anywhere; }
+  .wn-list .cand-facts { gap: 6px; }
+  .wn-list .cand-facts li { flex-direction: column; gap: 1px; font-size: 12px; padding-bottom: 6px; overflow-wrap: anywhere; }
+  .wn-list .cand-facts li span:first-child { font-size: 11px; }
+  .wn-list .cand-btn { font-size: 12px; padding: 9px 8px; line-height: 1.3; }
+}

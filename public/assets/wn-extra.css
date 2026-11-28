@@ -67,3 +67,12 @@
 .wn-list .cand-filter-actions button { border: 1px solid var(--navy, #102a47); background: #fff; color: var(--navy, #102a47); border-radius: 4px; padding: 9px 14px; font-weight: 700; font-size: 13px; cursor: pointer; }
 .wn-list .cand-filter-actions button[data-cf-work] { background: var(--navy, #102a47); color: #fff; }
 .wn-list .cand-card[hidden] { display: none !important; }
+
+/* Vacancy card: photo opens the details */
+.vacancy-grid > .vac-photo { position: relative; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 6px; overflow: hidden; align-self: start; }
+.vacancy-grid > .vac-photo img { display: block; width: 100%; height: auto; aspect-ratio: 3/2; object-fit: cover; border-radius: 6px; transition: transform .25s; }
+.vacancy-grid > .vac-photo:hover img { transform: scale(1.03); }
+.vacancy-grid > .vac-photo .vac-hint { position: absolute; left: 12px; bottom: 12px; background: #102a47e6; color: #fff; font-size: 13px; font-weight: 700; padding: 8px 12px; border-radius: 999px; }
+.vacancy .vac-toggle { display: block; margin: 4px 0 14px; padding: 0; border: 0; background: none; color: #137c64; font-weight: 700; font-size: 14px; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; min-height: 32px; }
+.vacancy .vac-more[hidden] { display: none !important; }
+@media (max-width: 650px) { .vacancy-grid > .vac-photo img { max-height: 220px; } }

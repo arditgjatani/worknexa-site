@@ -26,7 +26,7 @@
   const STATUS = { new: 'E re', reviewing: 'Në shqyrtim', contacted: 'E kontaktuar', closed: 'E mbyllur' };
   const TYPE = { worker: 'Punëtor', employer: 'Punëdhënës', agency: 'Agjenci' };
   const FIELD = {
-    name: 'Emri', company: 'Firma', profession: 'Profesioni', experience: 'Përvoja (vjet)', country: 'Vendi',
+    name: 'Emri', company: 'Firma', age: 'Mosha', profession: 'Profesioni', experience: 'Përvoja (vjet)', country: 'Vendi',
     languages: 'Gjuhët', phone: 'Telefoni', email: 'E-mail', sector: 'Sektori', quantity: 'Numri i punëtorëve',
     destination: 'Destinacioni', availability: 'Disponueshmëria', message: 'Mesazhi', video_link: 'Link videoje',
     interest: 'Interesi', consent_at: 'Pëlqimi më', vacancyId: 'Oferta e zgjedhur', sectorInterest: 'Sektori i zgjedhur',
@@ -110,10 +110,12 @@
       if (k === 'consent_at') val = esc(fmtDate(v));
       return `<dt>${esc(FIELD[k] || k)}</dt><dd>${val}</dd>`;
     }).join('');
-    const media = a.files.map((f) => f.kind === 'photo'
+    const media = a.files.filter((f) => f.kind === 'photo' || f.kind === 'video').map((f) => f.kind === 'photo'
       ? `<img src="/api/admin/files/${f.id}" alt="Foto" loading="lazy" data-full="/api/admin/files/${f.id}">`
       : `<video src="/api/admin/files/${f.id}" controls preload="metadata"></video>`).join('');
-    const fileLinks = a.files.map((f) => `<a href="/api/admin/files/${f.id}?download=1">${f.kind === 'photo' ? 'Foto' : 'Video'} (${fmtSize(f.size)})</a>`).join(' · ');
+    const KIND = { cv: 'CV', photo: 'Foto', video: 'Video' };
+    const cvLinks = a.files.filter((f) => f.kind === 'cv').map((f) => `<a href="/api/admin/files/${f.id}" target="_blank" rel="noopener">📄 Hap CV-në</a>`).join(' · ');
+    const fileLinks = a.files.map((f) => `<a href="/api/admin/files/${f.id}?download=1">${KIND[f.kind] || f.kind} (${fmtSize(f.size)})</a>`).join(' · ');
     return `<article class="item st-${a.status}" data-id="${a.id}">
       <div class="row1">
         <div><h3>${esc(title)}</h3><div class="meta"><span class="tag">${esc(TYPE[a.type] || a.type)}</span> · ${esc(fmtDate(a.created_at))} · ${esc(a.id.slice(0, 8))}</div></div>
@@ -122,7 +124,9 @@
         </div>
       </div>
       <dl>${rows}</dl>
-      ${media ? `<div class="media">${media}</div><div class="meta">Shkarko: ${fileLinks}</div>` : ''}
+      ${cvLinks ? `<div class="meta">${cvLinks}</div>` : ''}
+      ${media ? `<div class="media">${media}</div>` : ''}
+      ${a.files.length ? `<div class="meta">Shkarko: ${fileLinks}</div>` : ''}
       <div class="note"><textarea data-act="note" rows="2" placeholder="Shënimet tuaja (shihen vetëm këtu)…">${esc(a.note || '')}</textarea></div>
       <div class="more">
         ${a.type === 'worker' ? '<button class="ghost" data-act="tocand">Shto te kandidatët në faqe</button>' : ''}

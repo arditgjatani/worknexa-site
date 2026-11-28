@@ -3,7 +3,7 @@ import { json, bad, ensureSchema, now, uid, sign, clean, rateLimited, clientIp }
 
 const TYPES = ['employer', 'worker', 'agency'];
 const FIELDS = ['company', 'country', 'name', 'email', 'phone', 'sector', 'quantity', 'message',
-  'profession', 'experience', 'languages', 'destination', 'availability', 'video_link', 'interest',
+  'profession', 'age', 'experience', 'languages', 'destination', 'availability', 'video_link', 'interest',
   'vacancyId', 'sectorInterest'];
 
 async function readBody(request) {
@@ -42,6 +42,10 @@ export async function onRequestPost({ request, env }) {
   if (!data.email && !data.phone) return bad('Email or phone is required');
   if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) return bad('Invalid email');
   if (data.video_link && !/^https?:\/\//i.test(data.video_link)) delete data.video_link;
+  if (data.age) {
+    const age = parseInt(data.age, 10);
+    if (Number.isFinite(age) && age >= 16 && age <= 80) data.age = String(age); else delete data.age;
+  }
   const consent = body.consent === true || body.consent === 'on' || body.consent === 'true' || body.consent === '1';
   if (!consent) return bad('Consent is required');
   data.consent_at = now();

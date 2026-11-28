@@ -41,3 +41,5 @@
 .wn-progress[hidden] { display: none; }
 .wn-progress div { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--mint, #7be0be); transition: width .2s; }
 .wn-progress span { position: relative; font-size: 13px; line-height: 26px; padding-left: 10px; }
+
+.wn-thumb.wn-file span { display: inline-block; max-width: 260px; padding: 10px 14px; border: 1px solid var(--line, #dbe4ec); border-radius: 6px; background: #f6f8fb; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

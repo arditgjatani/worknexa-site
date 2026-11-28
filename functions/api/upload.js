@@ -1,8 +1,12 @@
-// PUT /api/upload?kind=photo|video – candidate photo/video upload (private, stored in R2).
+// PUT /api/upload?kind=cv|photo|video – candidate CV, photo or video upload (private, stored in R2).
 // Header "x-upload-token" comes from the /api/interests response.
 import { json, bad, ensureSchema, now, uid, verify, clean } from '../../lib/core.js';
 
+const CV_TYPES = ['application/pdf', 'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/png'];
+
 const LIMITS = {
+  cv: { max: 2, bytes: 10 * 1024 * 1024, types: CV_TYPES },
   photo: { max: 3, bytes: 5 * 1024 * 1024, types: ['image/jpeg', 'image/png', 'image/webp'] },
   video: { max: 1, bytes: 50 * 1024 * 1024, types: ['video/mp4', 'video/quicktime', 'video/webm'] },
 };
@@ -14,6 +18,9 @@ function sniff(bytes) {
   if (hex(0, 8) === '89504e470d0a1a0a') return 'image/png';
   if (hex(0, 4) === '52494646' && hex(8, 4) === '57454250') return 'image/webp';
   if (hex(0, 4) === '1a45dfa3') return 'video/webm';
+  if (hex(0, 4) === '25504446') return 'application/pdf'; // "%PDF"
+  if (hex(0, 8) === 'd0cf11e0a1b11ae1') return 'application/msword'; // old Word (.doc)
+  if (hex(0, 4) === '504b0304') return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'; // .docx (zip)
   if (hex(4, 4) === '66747970') { // "ftyp"
     const brand = String.fromCharCode(...b.slice(8, 12));
     return brand.startsWith('qt') ? 'video/quicktime' : 'video/mp4';
@@ -46,7 +53,7 @@ export async function onRequestPut({ request, env }) {
   if (!ct || !lim.types.includes(ct)) return bad('File type is not allowed');
 
   const id = uid();
-  const ext = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'video/mp4': 'mp4', 'video/quicktime': 'mov', 'video/webm': 'webm' }[ct];
+  const ext = { 'application/pdf': 'pdf', 'application/msword': 'doc', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx', 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'video/mp4': 'mp4', 'video/quicktime': 'mov', 'video/webm': 'webm' }[ct];
   const key = `applications/${appId}/${kind}-${id}.${ext}`;
   await env.FILES.put(key, buf, { httpMetadata: { contentType: ct } });
   const name = clean(decodeURIComponent(request.headers.get('x-file-name') || ''), 200) || `${kind}.${ext}`;
